@@ -1,58 +1,72 @@
 import { CollectionConfig } from 'payload/types'
 import { anyone } from './access/anyone'
 import adminsAndUser from './access/adminsAndUser'
+import { updateRelationshipRefs } from "./hooks/updateRelationshipRefs";
+import { Category, Product } from "payload/generated-types";
 
 const Products: CollectionConfig = {
-  slug: 'products',
+  slug: "products",
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: "name",
   },
   access: {
     read: anyone,
     update: adminsAndUser,
     create: adminsAndUser,
-    delete: adminsAndUser
+    delete: adminsAndUser,
+  },
+  hooks: {
+    afterChange: [
+      updateRelationshipRefs<Product, Category>({
+        relationshipId: "category-product",
+        sourceFieldName: "category",
+        targetFieldName: "products",
+      }),
+    ],
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
+      name: "name",
+      label: "Name",
+      type: "text",
       required: true,
     },
     {
-      name: 'description',
-      type: 'textarea',
+      name: "description",
+      label: "Description",
+      type: "textarea",
     },
     {
-      name: 'price',
-      type: 'number',
-      required: true
+      name: "price",
+      type: "number",
+      required: true,
     },
     {
-      name: 'img_alt',
-      type: 'text'
-    }
+      name: "img",
+      label: "Product Image",
+      type: "upload",
+      relationTo: "media",
+    },
+    {
+      name: "category",
+      label: "Category",
+      type: "relationship",
+      relationTo: "categories",
+    },
+    {
+      name: "tags",
+      label: "Tags",
+      type: "array",
+      fields: [
+        {
+          name: "tag",
+          label: "Tags",
+          type: "relationship",
+          relationTo: "tags",
+        },
+      ],
+    },
   ],
-  upload: {
-    staticURL: '/productImages',
-    staticDir:'media/productImages',
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 256,
-        height: 256,
-        position: 'centre',
-      },
-      {
-        name: 'square',
-        width: 512,
-        height: 512,
-        position: 'centre',
-      },
-    ],
-    adminThumbnail: 'thumbnail',
-    mimeTypes: ['image/*'],
-  },
-}
+};
 
 export default Products

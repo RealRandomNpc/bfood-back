@@ -1,32 +1,54 @@
 import { CollectionConfig } from 'payload/types'
 import { anyone } from './access/anyone'
 import adminsAndUser from './access/adminsAndUser'
+import { updateRelationshipRefs } from "./hooks/updateRelationshipRefs";
+import { Category, Product } from "payload/generated-types";
 
 const Categories: CollectionConfig = {
-  slug: 'categories',
+  slug: "categories",
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: "title",
   },
   access: {
     read: anyone,
     update: adminsAndUser,
     create: adminsAndUser,
-    delete: adminsAndUser
+    delete: adminsAndUser,
+  },
+  hooks: {
+    afterChange: [
+      updateRelationshipRefs<Category, Product>({
+        relationshipId: "category-product",
+        sourceFieldName: "products",
+        targetFieldName: "category",
+      }),
+    ],
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
+      name: "title",
+      label: "Title",
+      type: "text",
       required: true,
       unique: true,
     },
     {
-      name: 'products',
-      type: 'relationship',
-      relationTo: 'products',
-      hasMany: true
-    }
+      name: "sub_title",
+      label: "Sub title",
+      type: "text",
+    },
+    {
+      name: "products",
+      type: "relationship",
+      relationTo: "products",
+      hasMany: true,
+    },
+    {
+      name: "priority",
+      type: "number",
+      defaultValue: 0,
+    },
   ],
-}
+};
 
 export default Categories

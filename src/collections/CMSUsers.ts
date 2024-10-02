@@ -9,46 +9,47 @@ import { loginAfterCreate } from './hooks/loginAfterCreate'
 const EXPIRATION_TIME = 60 * 60 * 24 * 30;
 
 const CMSUsers: CollectionConfig = {
-  slug: 'cms-users',
+  slug: "cms-users",
   auth: {
     tokenExpiration: EXPIRATION_TIME,
     cookies: {
-      sameSite: 'none',
-      secure: true,
+      sameSite: "none",
+      secure: false,
       domain: process.env.COOKIE_DOMAIN,
     },
+    // useAPIKey: true,
   },
   access: {
     read: adminsAndUser,
     create: anyone,
     update: adminsAndUser,
     delete: admins,
-    admin: ({ req: { user } }) => checkRole(['admin'], user),
+    admin: ({ req: { user } }) => checkRole(["admin"], user),
   },
   admin: {
-    useAsTitle: 'email',
+    useAsTitle: "email",
   },
   hooks: {
     afterChange: [loginAfterCreate],
   },
   fields: [
     {
-      name: 'firstName',
-      type: 'text',
+      name: "firstName",
+      type: "text",
     },
     {
-      name: 'lastName',
-      type: 'text',
+      name: "lastName",
+      type: "text",
     },
     {
-      name: 'email',
-      type: 'email',
+      name: "email",
+      type: "email",
       required: true,
-      unique: true
+      unique: true,
     },
     {
-      name: 'roles',
-      type: 'select',
+      name: "roles",
+      type: "select",
       hasMany: true,
       saveToJWT: true,
       hooks: {
@@ -56,16 +57,20 @@ const CMSUsers: CollectionConfig = {
       },
       options: [
         {
-          label: 'Admin',
-          value: 'admin',
+          label: "Super Admin",
+          value: "super-admin",
         },
         {
-          label: 'User',
-          value: 'user',
+          label: "Admin",
+          value: "admin",
+        },
+        {
+          label: "User",
+          value: "user",
         },
       ],
     },
   ],
-}
+};
 
 export default CMSUsers

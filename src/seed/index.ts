@@ -2,11 +2,11 @@ import type { Payload } from 'payload'
 
 export const seed = async (payload: Payload): Promise<void> => {
   await payload.create({
-    collection: 'cms-users',
+    collection: "cms-users",
     data: {
-      email: 'demo@payloadcms.com',
-      password: 'demo',
-      roles: ['admin'],
+      email: "demo@payloadcms.com",
+      password: "demo",
+      roles: ["admin", "super-admin"],
     },
-  })
+  });
 }

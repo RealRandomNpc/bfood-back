@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strict": false,
@@ -10,8 +10,7 @@
     "rootDir": "./src",
     "jsx": "react",
     "paths": {
-      "payload/generated-types": ["./src/payload-types.ts"],
-       "@/*": ["./src/*"]
+      "payload/generated-types": ["./src/payload-types.ts"]
     }
   },
   "include": ["src"],

@@ -29,7 +29,7 @@ const start = async () => {
     await seed(payload)
   }
 
-  app.listen(3000)
+  app.listen(process.env.PORT);
 }
 
 start()

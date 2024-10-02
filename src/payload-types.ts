@@ -11,10 +11,15 @@ export interface Config {
     'cms-users': CmsUser;
     products: Product;
     categories: Category;
+    media: Media;
+    tags: Tag;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  globals: {};
+  globals: {
+    footer: Footer;
+    'index-page': IndexPage;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -24,7 +29,7 @@ export interface CmsUser {
   id: string;
   firstName?: string | null;
   lastName?: string | null;
-  roles?: ('admin' | 'user')[] | null;
+  roles?: ('super-admin' | 'admin' | 'user')[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -45,7 +50,24 @@ export interface Product {
   name: string;
   description?: string | null;
   price: number;
-  img_alt?: string | null;
+  img?: string | Media | null;
+  category?: (string | null) | Category;
+  tags?:
+    | {
+        tag?: (string | null) | Tag;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -65,7 +87,7 @@ export interface Product {
       filesize?: number | null;
       filename?: string | null;
     };
-    square?: {
+    regular?: {
       url?: string | null;
       width?: number | null;
       height?: number | null;
@@ -81,8 +103,20 @@ export interface Product {
  */
 export interface Category {
   id: string;
-  name: string;
+  title: string;
+  sub_title?: string | null;
   products?: (string | Product)[] | null;
+  priority?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: string;
+  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -119,6 +153,49 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: string;
+  links?:
+    | {
+        label?: string | null;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "index-page".
+ */
+export interface IndexPage {
+  id: string;
+  beforeProducts?:
+    | (
+        | {
+            text?: string | null;
+            autoFill?: boolean | null;
+            speed?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'marquee';
+          }
+        | {
+            header_img?: string | Media | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'full-header';
+          }
+      )[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 
 

@@ -17,6 +17,7 @@ export function updateRelationshipRefs<
   relationshipId,
   sourceFieldName,
   targetFieldName,
+  convertToBoolean = false,
 }: {
   /**
    * A unique identifier for the relationship. This is used to prevent infinite loops.
@@ -31,6 +32,10 @@ export function updateRelationshipRefs<
    * The field name on the target collection that contains the opposite relationship.
    */
   targetFieldName: keyof TargetCollection;
+  /**
+   * The field name on the target collection that needed to be converted to boolean or stay as Id
+   */
+  convertToBoolean: boolean;
 }): CollectionAfterChangeHook<SourceCollection> {
   return async function (params) {
     const { req, previousDoc, doc, collection } = params;
@@ -137,11 +142,15 @@ export function updateRelationshipRefs<
           targetValueSet.add(docId);
         }
 
-        const newTargetData = {
-          [targetFieldName]: targetField.hasMany
-            ? Array.from(targetValueSet)
-            : (Array.from(targetValueSet)[0] ?? null),
-        };
+        const newTargetData = convertToBoolean
+          ? {
+              [targetFieldName]: targetValueSet.size !== 0,
+            }
+          : {
+              [targetFieldName]: targetField.hasMany
+                ? Array.from(targetValueSet)
+                : (Array.from(targetValueSet)[0] ?? null),
+            };
 
         return req.payload.update({
           req,

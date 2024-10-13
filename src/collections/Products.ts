@@ -66,6 +66,12 @@ const Products: CollectionConfig = {
         },
       ],
     },
+    {
+      name: "has_product_options",
+      label: "Has Product Options",
+      type: "checkbox",
+      defaultValue: false,
+    },
   ],
 };
 

@@ -16,11 +16,12 @@ import Footer from "./globals/Footer";
 import IndexPage from "./globals/IndexPage";
 import Tags from "./collections/Tags";
 import Cart from "./globals/Cart";
+import ProductOptions from "./collections/ProductOptions";
 // import { s3Storage } from "@payloadcms/storage-s3";
 
 export default buildConfig({
-  cors: ["http://localhost:3000"],
-  csrf: ["http://localhost:3000"],
+  cors: [process.env.NEXT_DEPLOY_URL],
+  csrf: [process.env.NEXT_DEPLOY_URL],
   rateLimit: {
     trustProxy: true,
   },
@@ -55,7 +56,7 @@ export default buildConfig({
     },
   },
   editor: slateEditor({}),
-  collections: [CMSUsers, Products, Categories, Media, Tags],
+  collections: [CMSUsers, Products, Categories, Media, Tags, ProductOptions],
   globals: [Footer, IndexPage, Cart],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),

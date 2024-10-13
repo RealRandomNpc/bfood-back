@@ -13,9 +13,9 @@ const CMSUsers: CollectionConfig = {
   auth: {
     tokenExpiration: EXPIRATION_TIME,
     cookies: {
-      sameSite: "none",
+      // sameSite: "none",
       secure: false,
-      domain: process.env.COOKIE_DOMAIN,
+      // domain: process.env.COOKIE_DOMAIN,
     },
     // useAPIKey: true,
   },

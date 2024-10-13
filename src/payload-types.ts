@@ -13,12 +13,14 @@ export interface Config {
     categories: Category;
     media: Media;
     tags: Tag;
+    'products-options': ProductsOption;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   globals: {
     footer: Footer;
     'index-page': IndexPage;
+    'cart-settings': CartSetting;
   };
 }
 /**
@@ -58,6 +60,7 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  has_product_options?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -87,14 +90,6 @@ export interface Media {
       filesize?: number | null;
       filename?: string | null;
     };
-    regular?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
   };
 }
 /**
@@ -117,6 +112,37 @@ export interface Category {
 export interface Tag {
   id: string;
   name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products-options".
+ */
+export interface ProductsOption {
+  id: string;
+  product_options_name?: string | null;
+  products?: (string | Product)[] | null;
+  product_options_blocks?:
+    | {
+        title: string;
+        sub_title?: string | null;
+        min_select?: number | null;
+        max_select?: number | null;
+        options_type?: ('radio' | 'single' | 'multiple') | null;
+        available_options?:
+          | {
+              name: string;
+              extra_price?: number | null;
+              img?: string | Media | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'default-product-option';
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -194,6 +220,34 @@ export interface IndexPage {
           }
       )[]
     | null;
+  afterSearchPromoted?:
+    | {
+        title: string;
+        sub_title?: string | null;
+        products?: (string | Product)[] | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'category-block';
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cart-settings".
+ */
+export interface CartSetting {
+  id: string;
+  pickup: {
+    is_active?: boolean | null;
+    more_details?: string | null;
+  };
+  delivery: {
+    is_active?: boolean | null;
+    more_details?: string | null;
+  };
+  min_order?: number | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }

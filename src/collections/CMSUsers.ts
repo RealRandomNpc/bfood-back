@@ -10,15 +10,7 @@ const EXPIRATION_TIME = 60 * 60 * 24 * 30;
 
 const CMSUsers: CollectionConfig = {
   slug: "cms-users",
-  auth: {
-    tokenExpiration: EXPIRATION_TIME,
-    cookies: {
-      // sameSite: "none",
-      secure: false,
-      // domain: process.env.COOKIE_DOMAIN,
-    },
-    // useAPIKey: true,
-  },
+  auth: true,
   access: {
     read: adminsAndUser,
     create: anyone,

@@ -35,7 +35,7 @@ export function updateRelationshipRefs<
   /**
    * The field name on the target collection that needed to be converted to boolean or stay as Id
    */
-  convertToBoolean: boolean;
+  convertToBoolean?: boolean;
 }): CollectionAfterChangeHook<SourceCollection> {
   return async function (params) {
     const { req, previousDoc, doc, collection } = params;
@@ -126,7 +126,6 @@ export function updateRelationshipRefs<
       },
     });
 
-    console.log("STOP HERE");
 
     // update the target docs
     await Promise.all(

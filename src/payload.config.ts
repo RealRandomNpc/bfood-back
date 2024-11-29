@@ -17,6 +17,7 @@ import IndexPage from "./globals/IndexPage";
 import Tags from "./collections/Tags";
 import Cart from "./globals/Cart";
 import ProductOptions from "./collections/ProductOptions";
+import PaymentPage from "./globals/PaymentPage";
 // import { s3Storage } from "@payloadcms/storage-s3";
 
 export default buildConfig({
@@ -57,7 +58,7 @@ export default buildConfig({
   },
   editor: slateEditor({}),
   collections: [CMSUsers, Products, Categories, Media, Tags, ProductOptions],
-  globals: [Footer, IndexPage, Cart],
+  globals: [Footer, IndexPage, Cart, PaymentPage],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
   },

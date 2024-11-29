@@ -18,6 +18,7 @@ const Cart: GlobalConfig = {
           fields: [
             {
               name: "is_active",
+              label: "Is Active",
               type: "checkbox",
               defaultValue: true,
             },
@@ -25,6 +26,12 @@ const Cart: GlobalConfig = {
               name: "more_details",
               label: "Info Shown to the User",
               type: "text",
+            },
+            {
+              name: "service_fee",
+              label: "Service Fee",
+              type: "number",
+              defaultValue: 0,
             },
           ],
         },
@@ -35,6 +42,7 @@ const Cart: GlobalConfig = {
           fields: [
             {
               name: "is_active",
+              label: "Is Active",
               type: "checkbox",
               defaultValue: true,
             },
@@ -42,6 +50,12 @@ const Cart: GlobalConfig = {
               name: "more_details",
               label: "Info Shown to the User",
               type: "text",
+            },
+            {
+              name: "service_fee",
+              label: "Service Fee",
+              type: "number",
+              defaultValue: 0,
             },
           ],
         },
@@ -53,6 +67,35 @@ const Cart: GlobalConfig = {
       type: "number",
       defaultValue: 0,
     },
+    {
+      name: 'store_address', // required
+      label: "Store Address",
+      type: 'group', // required
+      interfaceName: 'store_details', // optional
+      fields: [
+        // required
+        {
+          name: 'city',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'street',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'house_number',
+          type: 'number',
+          required: true,
+        },
+        {
+          name: 'description',
+          label: 'Location Description',
+          type: 'textarea',
+        },
+      ],
+    }
   ],
 };
 

@@ -21,7 +21,7 @@ import PaymentPage from "./globals/PaymentPage";
 // import { s3Storage } from "@payloadcms/storage-s3";
 
 export default buildConfig({
-  cors: [process.env.NEXT_DEPLOY_URL],
+  cors: '*',
   csrf: [process.env.NEXT_DEPLOY_URL],
   rateLimit: {
     trustProxy: true,

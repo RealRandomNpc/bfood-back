@@ -5,7 +5,7 @@ export const seed = async (payload: Payload): Promise<void> => {
     collection: "cms-users",
     data: {
       email: "demo@payloadcms.com",
-      password: "demo",
+      password: process.env.PAYLOAD_ADMIN_PASSWORD,
       roles: ["admin", "super-admin"],
     },
   });

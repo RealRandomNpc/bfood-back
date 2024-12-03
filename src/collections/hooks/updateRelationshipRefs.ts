@@ -2,8 +2,9 @@ import {
   TypeWithID,
   RelationshipField,
   CollectionAfterChangeHook,
-  RequestContext,
 } from "payload/types";
+
+import { RequestContext } from "payload";
 
 /**
  * Updates the relationship references on the target collection when the source collection changes.
@@ -38,7 +39,8 @@ export function updateRelationshipRefs<
   convertToBoolean?: boolean;
 }): CollectionAfterChangeHook<SourceCollection> {
   return async function (params) {
-    const { req, previousDoc, doc, collection } = params;
+    const { req, previousDoc, doc } = params;
+    const collection = (params as any).collection
 
     const docId = doc.id;
 
@@ -113,7 +115,7 @@ export function updateRelationshipRefs<
     // find the target docs
     const { docs: targetDocs } = await req.payload.find({
       req,
-      collection: targetCollectionName,
+      collection: targetCollectionName as any,
       pagination: false,
       depth: 0,
       where: {
@@ -153,7 +155,7 @@ export function updateRelationshipRefs<
 
         return req.payload.update({
           req,
-          collection: targetCollectionName,
+          collection: targetCollectionName as any,
           id: targetDoc.id,
           context,
           data: newTargetData,

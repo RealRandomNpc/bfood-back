@@ -1,31 +1,76 @@
-version: '3'
-
 services:
-  payload:
-    image: node:18-alpine
+  watchtower:
+    image: containrrr/watchtower
+    command:
+      - "--label-enable"
+      - "--interval"
+      - "30"
+      - "--rolling-restart"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      # - "--api.insecure=true"
+      - "--log.level=ERROR"
+      - "--accesslog=true"
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=randnpc@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entryPoints.web.forwardedHeaders.insecure"
+      - "--entryPoints.websecure.forwardedHeaders.insecure"
     ports:
-      - '3000:3000'
+      - "80:80"
+      - "443:443"
+      # - "8080:8080"
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+  bfood-back:
+    image: randomnpc/bfood-back-papalusky:latest
+    build:
+      dockerfile: Dockerfile
+    labels:
+      - "traefik.enable=true"
+      # - "traefik.http.middlewares.bfood-back-ratelimit.ratelimit.average=20"
+      - "traefik.http.routers.bfood-back.rule=Host(`${PAYLOAD_DEPLOY_HOST}`) && !Method(`POST`)"
+      - "traefik.http.routers.bfood-back.entrypoints=websecure"
+      - "traefik.http.routers.bfood-back.tls.certresolver=myresolver"
+      # - "traefik.http.routers.bfood-back.middlewares=bfood-back-ratelimit"
+      # Define separate router for POST methods
+      # - "traefik.http.middlewares.bfood-back-ratelimit-post.ratelimit.average=1"
+      # - "traefik.http.middlewares.bfood-back-ratelimit-post.ratelimit.period=1m"
+      - "traefik.http.routers.bfood-back-post.rule=Host(`${PAYLOAD_DEPLOY_HOST}`) && Method(`POST`)"
+      # - "traefik.http.routers.bfood-back-post.middlewares=bfood-back-ratelimit-post"
+      - "traefik.http.routers.bfood-back-post.entrypoints=websecure"
+      - "traefik.http.routers.bfood-back-post.tls.certresolver=myresolver"
+        # Enable watchtower
+      - "com.centurylinklabs.watchtower.enable=true"
+    # secrets:
+    #   - some_data
+    environment:
+      - NODE_ENV=production
     volumes:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
-    depends_on:
-      - mongo
     env_file:
       - .env
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
-    volumes:
-      - data:/data/db
-    logging:
-      driver: none
+    deploy:
+      mode: replicated
+      replicas: 2
+    restart: always
 
 volumes:
+  letsencrypt:
   data:
   node_modules:
+
+secrets:
+  some_data:
+    file: some_data.txt
